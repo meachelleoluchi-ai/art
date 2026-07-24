@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: book-catalog-config
+data:
+  DEVELOPMENT_MODE: "false"
+  DEBUG: "false"
+  ALLOWED_HOSTS: "*"
+  DATABASE_NAME: "books"
+  DATABASE_USER: "books"
+  DATABASE_HOST: "book-catalog-postgres"

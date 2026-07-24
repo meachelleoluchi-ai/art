@@ -1,0 +1,34 @@
+# Version control
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+venv/
+.venv/
+env/
+
+# Local database
+db.sqlite3
+db.sqlite3-journal
+
+# Collected static files — regenerated during the build
+staticfiles/
+
+# Deployment manifests and CI config — not needed inside the image
+k8s/
+charts/
+.github/
+docker-compose.yml
+
+# Docs
+README.md
+REPORT.md
+*.pdf
+
+# Editor / OS noise
+.vscode/
+.idea/
+.DS_Store

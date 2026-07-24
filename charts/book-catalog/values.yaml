@@ -1,0 +1,57 @@
+replicaCount: 2
+
+image:
+  repository: ghcr.io/meachelleoluchi-ai/art
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+ingress:
+  enabled: true
+  className: nginx
+  host: book-catalog.local
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+  tls:
+    enabled: false
+    secretName: ""
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+# Non-sensitive application configuration; rendered into a ConfigMap.
+config:
+  debug: "false"
+  allowedHosts: "*"
+  databaseName: books
+  databaseUser: books
+  # Leave blank to use the in-chart PostgreSQL service; set to point at an
+  # external/managed database instead.
+  databaseHost: ""
+
+secrets:
+  secretKey: "books"
+  databasePassword: "books"
+
+# A single-replica in-cluster database for demo clusters. Disable when
+# pointing at a managed database via config.databaseHost.
+postgresql:
+  enabled: true
+  image: postgres:17.5
+  storage: 1Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
