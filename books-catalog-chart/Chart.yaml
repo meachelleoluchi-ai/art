@@ -1,0 +1,6 @@
+apiVersion: v2
+name: books-catalog-chart
+description: A Helm chart used to deploy the books catalog API
+type: application
+version: 0.1.0
+appVersion: "1.16.0"

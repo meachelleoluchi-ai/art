@@ -1,17 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-servers
+  name: books-catalog
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
-      service: nginx-server
+      service: books-catalog
   template:
     metadata:
       labels:
-        service: nginx-server
+        service: books-catalog
     spec:
       containers:
-      - image: nginxdemos/hello
-        name: nginx-container
+      - image: ghcr.io/meachelleoluchi-ai/art-app:latest
+        name: api 
+      imagePullSecrets:
+      - name: bookcatalog

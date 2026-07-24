@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "books-catalog-chart.fullname" . }}
+  labels:
+    {{- include "books-catalog-chart.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "books-catalog-chart.selectorLabels" . | nindent 4 }}
