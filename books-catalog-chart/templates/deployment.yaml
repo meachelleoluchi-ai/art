@@ -44,5 +44,5 @@ spec:
               protocol: TCP
           readinessProbe:
             httpGet:
-              path: /api/ # Replace with the endpoint to your health view
+              path: /api/books/ # Replace with the endpoint to your health view
               port: http
