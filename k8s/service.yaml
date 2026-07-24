@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-internal
+  name: book-catalog-internal
 spec:
   ports:
   - name: http
     port: 80
     protocol: TCP
-    targetPort: 80
+    targetPort: http
   selector:
-    service: nginx-server # Make sure this matches the `.spec.template.metadata.labels` from the deployment
+    service: book-catalog # Make sure this matches the `.spec.template.metadata.labels` from the deployment
   type: ClusterIP

@@ -6,6 +6,13 @@ from .models import Book
 from .serializer import BookSerializer
 
 
+class HealthView(APIView):
+    """Liveness/readiness probe target. Deliberately does not touch the database."""
+
+    def get(self, request):
+        return Response({"status": "ok"})
+
+
 class BookView(APIView):
     """List all books or create a new book"""
 

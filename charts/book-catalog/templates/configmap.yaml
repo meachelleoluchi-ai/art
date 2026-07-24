@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "book-catalog.fullname" . }}-config
+  labels:
+    {{- include "book-catalog.labels" . | nindent 4 }}
+data:
+  DEVELOPMENT_MODE: "false"
+  DEBUG: {{ .Values.config.debug | quote }}
+  ALLOWED_HOSTS: {{ .Values.config.allowedHosts | quote }}
+  DATABASE_NAME: {{ .Values.config.databaseName | quote }}
+  DATABASE_USER: {{ .Values.config.databaseUser | quote }}
+  DATABASE_HOST: {{ include "book-catalog.databaseHost" . | quote }}

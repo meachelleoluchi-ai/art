@@ -21,12 +21,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-&v0+^wibs(9p*0b=&)m!o_j3)4%rsrc4*go#9b_1n8-96+t-kj'
+# Read from the environment; the insecure default only applies locally.
+SECRET_KEY = env.str(
+    "SECRET_KEY",
+    "django-insecure-&v0+^wibs(9p*0b=&)m!o_j3)4%rsrc4*go#9b_1n8-96+t-kj",
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool("DEBUG", False)
 
-ALLOWED_HOSTS = []
+# Comma-separated list, e.g. ALLOWED_HOSTS="api.example.com,localhost"
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", ["localhost", "127.0.0.1"])
 
 
 # Application definition
@@ -142,3 +147,20 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Target for `collectstatic`, which runs at image build time.
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+
+# HTTPS hardening
+# https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
+
+# Off by default so local HTTP development still works; enable these in any
+# environment that terminates TLS.
+SESSION_COOKIE_SECURE = env.bool("SESSION_COOKIE_SECURE", False)
+CSRF_COOKIE_SECURE = env.bool("CSRF_COOKIE_SECURE", False)
+SECURE_HSTS_SECONDS = env.int("SECURE_HSTS_SECONDS", 0)
+
+# Trust the ingress/proxy's forwarded protocol header when deciding if a
+# request arrived over HTTPS.
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

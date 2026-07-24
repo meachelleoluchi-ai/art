@@ -11,13 +11,25 @@ services:
       DATABASE_HOST: "db"
       DATABASE_NAME: "books"
       DEVELOPMENT_MODE: false
+      DEBUG: "true"
+      ALLOWED_HOSTS: "localhost,127.0.0.1"
+      SECRET_KEY: "local-development-only-not-a-real-secret"
+    depends_on:
+      db:
+        condition: service_healthy
   db:
     image: postgres:17.5
     environment:
       POSTGRES_USER: "books"
       POSTGRES_PASSWORD: "books"
+      POSTGRES_DB: "books"
     volumes:
       - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U books -d books"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   pg_data:

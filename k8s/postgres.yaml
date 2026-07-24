@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: book-catalog-postgres
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book-catalog-postgres
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      service: book-catalog-postgres
+  template:
+    metadata:
+      labels:
+        service: book-catalog-postgres
+    spec:
+      containers:
+      - image: postgres:17.5
+        name: postgres
+        ports:
+        - name: postgresql
+          containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: "books"
+        - name: POSTGRES_USER
+          value: "books"
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: book-catalog-secret
+              key: DATABASE_PASSWORD
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        readinessProbe:
+          exec:
+            command: ["pg_isready", "-U", "books", "-d", "books"]
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: book-catalog-postgres
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: book-catalog-postgres
+spec:
+  ports:
+  - name: postgresql
+    port: 5432
+    protocol: TCP
+    targetPort: postgresql
+  selector:
+    service: book-catalog-postgres
+  type: ClusterIP
